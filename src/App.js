@@ -1,38 +1,25 @@
-import Directory from "./components/directory/directory.component";
+import { Routes, Route } from "react-router-dom";
+import Home from "./routes/home/home.component";
+import Navigation from "./components/navigation/navigation.component";
+import SignIn from "./routes/sign-in/sign-in.component";
+const Shop = () => {
+  return <h1>I am the shop</h1>;
+};
 
 const App = () => {
-  const categories = [
-    {
-      id: 1,
-      title: "Hats",
-      imageUrl: "https://i.ibb.co/cvpntL1/hats.png",
-    },
-    {
-      id: 2,
-      title: "Jackets",
-      imageUrl: "https://i.ibb.co/px2tCc3/jackets.png",
-    },
-    {
-      id: 3,
-      title: "Sneakers",
-      imageUrl: "https://i.ibb.co/0jqHpnp/sneakers.png",
-    },
-    {
-      id: 4,
-      title: "Womens",
-      imageUrl: "https://i.ibb.co/GCCdy8t/womens.png",
-    },
-    {
-      id: 5,
-      title: "Mens",
-      imageUrl: "https://i.ibb.co/R70vBrQ/men.png",
-    },
-  ];
-
   return (
-    <div>
-      <Directory categories={categories} />
-    </div>
+    <Routes>
+      <Route path="/" element={<Navigation />}>
+        {/* To render children , we need to tell the parent where to render the children components using Outlet*/}
+        {/* If you pass index , it's actually equivalent to saying index is equal to true.
+        So match this slash when it's empty as the base component. */}
+        <Route index element={<Home />} />
+        {/* This path is relative to the path of parent  */}
+        {/* To match it , it has to match parent path first */}
+        <Route path="shop" element={<Shop />} />
+        <Route path="sign-in" element={<SignIn />} />
+      </Route>
+    </Routes>
   );
 };
 
