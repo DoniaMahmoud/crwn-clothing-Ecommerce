@@ -89,4 +89,5 @@ export const signOutUser = async () => await signOut(auth);
 //1) auth
 //2) is callback that you want to call every time this auth state changes.
 export const onAuthStateChangedListener = (callback) =>
+  // create a listener for me using this callback, next value is the callback
   onAuthStateChanged(auth, callback);
