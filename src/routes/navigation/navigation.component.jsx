@@ -5,8 +5,8 @@ import { useContext } from "react";
 import { UserContext } from "../../contexts/user.contexts";
 import { CartContext } from "../../contexts/cart.context";
 import { signOutUser } from "../../utils/firebase/firebase.utils";
-import CartIcon from "../cart-icon/cart-icon.components";
-import CartDropdown from "../cart-dropdown/cart-dropdown.component";
+import CartIcon from "../../components/cart-icon/cart-icon.components";
+import CartDropdown from "../../components/cart-dropdown/cart-dropdown.component";
 import "./navigation.styles.scss";
 const Navigation = () => {
   //Use context as a hook tells this component whenever a value inside of
