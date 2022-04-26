@@ -12,7 +12,16 @@ import {
   onAuthStateChanged, //returns a listener
 } from "firebase/auth";
 //doc is used to get document instance
-import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
+import {
+  getFirestore,
+  doc,
+  getDoc,
+  setDoc,
+  collection,
+  writeBatch,
+  query,
+  getDocs,
+} from "firebase/firestore";
 // Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyAT5Jw8YI30zkGemWJHjnU2rXEpDySvN9k",
@@ -43,6 +52,70 @@ export const signInWithGoogleRedirect = () =>
 
 export const db = getFirestore();
 
+// allows us to upload these categories from that shop data up into
+// the respective collections up in Firestore.
+//async bec we are adding to external resource (firebase)
+//We want to make sure that all of our objects that we're trying to add
+//to the collection are successfully added.
+// And to do that, we need to use a batch.
+//collectionKey is the categories
+export const addCollectionAndDocuments = async (
+  collectionKey,
+  objectsToAdd
+) => {
+  const collectionRef = collection(db, collectionKey);
+  const batch = writeBatch(db);
+
+  //loops over object of category
+  objectsToAdd.forEach((object) => {
+    const docRef = doc(collectionRef, object.title.toLowerCase());
+    batch.set(docRef, object);
+  });
+  //begin firing it
+  await batch.commit();
+  console.log("done");
+};
+
+//read and get data fromm firestore
+export const getCategoriesAndDocuments = async () => {
+  const collectionRef = collection(db, "categories");
+
+  //gives me an object that i can get snapshot from
+  const q = query(collectionRef);
+
+  //fetch document snapshots asynchronously
+  const querySnapshot = await getDocs(q);
+
+  // gives an array of all individual docs inside
+  //creating the structure of objects below
+  const categoryMap = querySnapshot.docs.reduce((acc, docSnapshot) => {
+    const { title, items } = docSnapshot.data(); // loops object by object
+    //adding data using a hashtable
+    acc[title.toLowerCase()] = items;
+    return acc;
+  }, {});
+
+  return categoryMap;
+};
+
+/*
+{
+  hats:{
+    title:'hats',
+    items: [
+      {},
+      {},
+    ]
+  },
+   snaeaker:{
+    title:'sneaker',
+    items: [
+      {},
+      {},
+    ]
+  }
+}
+*/
 export const createUserDocumentFromAuth = async (
   userAuth,
   additionalInformation = {}
