@@ -1,20 +1,16 @@
-import "./form-input.styles.scss";
+import { Group, FormInputLabel, Input } from "./form-input.styles.jsx";
 const FormInput = ({ label, ...otherProps }) => {
   return (
-    <div className="group">
+    <Group>
       {/* if the value length is there, meaning that if the user has typed
       something into this input, that means that I want the label to shrink. */}
-      <input className="form-input" {...otherProps} />
+      <Input {...otherProps} />
       {label && (
-        <label
-          className={`${
-            otherProps.value.length ? "shrink " : ""
-          } form-input-label`}
-        >
+        <FormInputLabel shrink={otherProps.value.length}>
           {label}
-        </label>
+        </FormInputLabel>
       )}
-    </div>
+    </Group>
   );
 };
 export default FormInput;
