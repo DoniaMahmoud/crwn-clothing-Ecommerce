@@ -1,20 +1,49 @@
-import { createContext, useState, useEffect } from "react";
+import { createContext, useEffect, useReducer } from "react";
 import {
   onAuthStateChangedListener,
   createUserDocumentFromAuth,
 } from "../utils/firebase/firebase.utils";
+import { createAction } from "../utils/reducer/reducer.utils";
 //The actual value you want to access
 export const UserContext = createContext({
   currentUser: null,
   setCurrentUser: () => null,
 });
 
+export const USER_ACTION_TYPES = {
+  SET_CURRENT_USER: "SET_CURRENT_USER",
+};
+
+const userReducer = (state, action) => {
+  const { type, payload } = action;
+  switch (type) {
+    case USER_ACTION_TYPES.SET_CURRENT_USER:
+      return {
+        ...state,
+        currentUser: payload,
+      };
+    default:
+      throw new Error(`Unhandled type ${type} in userReducer`);
+  }
+};
+const INITIAL_STATE = {
+  currentUser: null,
+};
+
 //The actual functional component
 //<App/> is the children in our case (any component that is wrapped inside the provider)
 export const UserProvider = ({ children }) => {
   //Any component that is listening for current user should in turn update,
   //meaning that it should re render
-  const [currentUser, setCurrentUser] = useState(null);
+
+  // const [currentUser, setCurrentUser] = useState(null);
+  // userReducer , 1st arg: useReducer, 2nd arg: initial state
+  const [state, dispatch] = useReducer(userReducer, INITIAL_STATE);
+  const { currentUser } = state;
+
+  const setCurrentUser = (user) => {
+    dispatch(createAction(USER_ACTION_TYPES.SET_CURRENT_USER, user));
+  };
   const value = { currentUser, setCurrentUser };
   //On every context that gets built for us, there is a dot provider and the provider is the component
   //that will wrap around any other components that need access to the values inside.(eg. childrem)
