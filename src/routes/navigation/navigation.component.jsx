@@ -1,9 +1,11 @@
 import { Fragment } from "react";
 import { Outlet, Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 import { ReactComponent as CrwnLogo } from "../../assets/crown.svg";
 import { useContext } from "react";
-import { UserContext } from "../../contexts/user.contexts";
+
 import { CartContext } from "../../contexts/cart.context";
+import { selectCurrentUser } from "../../store/user/user.selector";
 import { signOutUser } from "../../utils/firebase/firebase.utils";
 import CartIcon from "../../components/cart-icon/cart-icon.components";
 import CartDropdown from "../../components/cart-dropdown/cart-dropdown.component";
@@ -17,7 +19,8 @@ import {
 const Navigation = () => {
   //Use context as a hook tells this component whenever a value inside of
   //this context updates re-render me.
-  const { currentUser } = useContext(UserContext);
+  //Selector updates whenever the state object is changed
+  const currentUser = useSelector(selectCurrentUser);
   const { isCartOpen } = useContext(CartContext);
 
   return (

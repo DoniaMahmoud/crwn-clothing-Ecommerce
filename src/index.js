@@ -1,28 +1,26 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
-import { UserProvider } from "./contexts/user.contexts";
-import { CategoriesProvider } from "./contexts/categories.context";
 import { CartProvider } from "./contexts/cart.context";
+import { store } from "./store/store";
 import App from "./App";
 import "./index.scss";
 import reportWebVitals from "./reportWebVitals";
 
 ReactDOM.render(
   <React.StrictMode>
-    <BrowserRouter>
-      {/* So then this way, the products are able to reach up into the user provider and get the value, 
+    <Provider store={store}>
+      <BrowserRouter>
+        {/* So then this way, the products are able to reach up into the user provider and get the value, 
     whereas the user provider can't necessarily go into its children  in order to fetch that data. */}
-      <UserProvider>
-        <CategoriesProvider>
-          <CartProvider>
-            {/* Any component inside can access the context
+        <CartProvider>
+          {/* Any component inside can access the context
            value inside of the provider itself. */}
-            <App />
-          </CartProvider>
-        </CategoriesProvider>
-      </UserProvider>
-    </BrowserRouter>
+          <App />
+        </CartProvider>
+      </BrowserRouter>
+    </Provider>
   </React.StrictMode>,
   document.getElementById("root")
 );

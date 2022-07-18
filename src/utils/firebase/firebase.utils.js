@@ -21,6 +21,7 @@ import {
   writeBatch,
   query,
   getDocs,
+  DocumentSnapshot,
 } from "firebase/firestore";
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -73,7 +74,6 @@ export const addCollectionAndDocuments = async (
   });
   //begin firing it
   await batch.commit();
-  console.log("done");
 };
 
 //read and get data fromm firestore
@@ -85,17 +85,7 @@ export const getCategoriesAndDocuments = async () => {
 
   //fetch document snapshots asynchronously
   const querySnapshot = await getDocs(q);
-
-  // gives an array of all individual docs inside
-  //creating the structure of objects below
-  const categoryMap = querySnapshot.docs.reduce((acc, docSnapshot) => {
-    const { title, items } = docSnapshot.data(); // loops object by object
-    //adding data using a hashtable
-    acc[title.toLowerCase()] = items;
-    return acc;
-  }, {});
-
-  return categoryMap;
+  return querySnapshot.docs.map((docSnapshot) => docSnapshot.data());
 };
 
 /*
